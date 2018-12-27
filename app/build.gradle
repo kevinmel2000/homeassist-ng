@@ -61,7 +61,7 @@ android {
         applicationId "com.payano.homeassistant"
         minSdkVersion 23
         targetSdkVersion 27
-        versionCode 10
+        versionCode 12
         versionName "0.0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
