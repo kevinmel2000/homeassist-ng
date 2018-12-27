@@ -88,7 +88,7 @@ public class EntityWidgetProvider extends AppWidgetProvider {
         int xPos = (canvas.getWidth() - yPos) / 2;//(canvas.getWidth() / 2);
         canvas.drawText(iconText, 0, yPos, paint);
 
-        RemoteViews remoteViews = new RemoteViews("com.axzae.homeassistant", R.layout.widget_entity);
+        RemoteViews remoteViews = new RemoteViews("com.payano.homeassistant", R.layout.widget_entity);
         remoteViews.setImageViewBitmap(R.id.image_icon, myBitmap);
         remoteViews.setTextViewText(R.id.text_state, widget.getFriendlyStateRow());
         remoteViews.setTextColor(R.id.text_state, iconColor);
