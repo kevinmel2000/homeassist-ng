@@ -10,6 +10,10 @@ The android app is available on Apple Play:
   <img alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_45.png" />
 </a>
 
+Configuring
+------------
+Go to the [wiki][2] page and checkout the information there, an example is provided to configure Home assistant with HomeAssist-ng
+
 Developement
 ------------
 Use Android Studio 3.2.0 or above.
@@ -31,3 +35,4 @@ Donation
 
 
 [1]: https://github.com/axzae/homeassist
+[2]: https://github.com/payano/homeassist-ng/wiki
