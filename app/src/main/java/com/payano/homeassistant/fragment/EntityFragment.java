@@ -273,6 +273,7 @@ public class EntityFragment extends BaseFragment implements EntityInterface {
     }
 
     public void search(String query) {
+        if(mAdapter == null) { return; /* Or raise exception? */ }
 
         //Do some magic
         ArrayList<Entity> filteredItems = new ArrayList<>();
