@@ -20,7 +20,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.payano.homeassistant.AppController;
 import com.payano.homeassistant.R;
 import com.payano.homeassistant.model.Entity;
-import com.payano.homeassistant.model.HomeAssistantServer;
 import com.payano.homeassistant.model.MDIFont;
 import com.payano.homeassistant.model.rest.CallServiceRequest;
 import com.payano.homeassistant.shared.GlideApp;
@@ -44,7 +43,7 @@ public class MediaPlayerFragment extends BaseControlFragment implements View.OnC
 
     private Call<ArrayList<ArrayList<Entity>>> mCall;
     private View mProgressBar;
-    private HomeAssistantServer mServer;
+    //private HomeAssistantServer mServer;
     private SharedPreferences mSharedPref;
     private String mFullUri;
     private String mPassword;
@@ -70,19 +69,19 @@ public class MediaPlayerFragment extends BaseControlFragment implements View.OnC
     final BigDecimal max = new BigDecimal("1.0");
     final BigDecimal step = new BigDecimal("0.05");
 
-    public static MediaPlayerFragment newInstance(Entity entity, HomeAssistantServer server) {
-        MediaPlayerFragment fragment = new MediaPlayerFragment();
-        Bundle args = new Bundle();
-        args.putString("entity", CommonUtil.deflate(entity));
-        args.putString("server", CommonUtil.deflate(server));
-        fragment.setArguments(args);
-        return fragment;
-    }
+//    public static MediaPlayerFragment newInstance(Entity entity, HomeAssistantServer server) {
+//        MediaPlayerFragment fragment = new MediaPlayerFragment();
+//        Bundle args = new Bundle();
+//        args.putString("entity", CommonUtil.deflate(entity));
+//        args.putString("server", CommonUtil.deflate(server));
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mServer = CommonUtil.inflate(getArguments().getString("server"), HomeAssistantServer.class);
+//        mServer = CommonUtil.inflate(getArguments().getString("server"), HomeAssistantServer.class);
     }
 
     @NonNull
@@ -142,25 +141,25 @@ public class MediaPlayerFragment extends BaseControlFragment implements View.OnC
     private void refreshCamera() {
         mProgressBar.setVisibility(View.VISIBLE);
         //mImageView.setVisibility(View.INVISIBLE);
-        GlideApp.with(getActivity())
-                .load(mServer.getBaseUrl() + mEntity.attributes.entityPicture)
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        mConnErrorView.setVisibility(View.VISIBLE);
-                        mProgressBar.setVisibility(View.GONE);
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        mProgressBar.setVisibility(View.GONE);
-                        mImageView.setVisibility(View.VISIBLE);
-                        return false;
-                    }
-                })
-                //.transition(DrawableTransitionOptions.withCrossFade())
-                .into(mImageView);
+//        GlideApp.with(getActivity())
+//                .load(mServer.getBaseUrl() + mEntity.attributes.entityPicture)
+//                .listener(new RequestListener<Drawable>() {
+//                    @Override
+//                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//                        mConnErrorView.setVisibility(View.VISIBLE);
+//                        mProgressBar.setVisibility(View.GONE);
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+//                        mProgressBar.setVisibility(View.GONE);
+//                        mImageView.setVisibility(View.VISIBLE);
+//                        return false;
+//                    }
+//                })
+//                //.transition(DrawableTransitionOptions.withCrossFade())
+//                .into(mImageView);
     }
 
     public void refreshUi() {
@@ -223,25 +222,25 @@ public class MediaPlayerFragment extends BaseControlFragment implements View.OnC
         if(mEntity.attributes.entityPicture != null) {
             mProgressBar.setVisibility(View.VISIBLE);
             //mImageView.setVisibility(View.INVISIBLE);
-            GlideApp.with(getActivity())
-                    .load(mServer.getBaseUrl() + mEntity.attributes.entityPicture)
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            mConnErrorView.setVisibility(View.VISIBLE);
-                            mProgressBar.setVisibility(View.GONE);
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            mProgressBar.setVisibility(View.GONE);
-                            mImageView.setVisibility(View.VISIBLE);
-                            return false;
-                        }
-                    })
-                    //.transition(DrawableTransitionOptions.withCrossFade())
-                    .into(mImageView);
+//            GlideApp.with(getActivity())
+//                    .load(mServer.getBaseUrl() + mEntity.attributes.entityPicture)
+//                    .listener(new RequestListener<Drawable>() {
+//                        @Override
+//                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//                            mConnErrorView.setVisibility(View.VISIBLE);
+//                            mProgressBar.setVisibility(View.GONE);
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+//                            mProgressBar.setVisibility(View.GONE);
+//                            mImageView.setVisibility(View.VISIBLE);
+//                            return false;
+//                        }
+//                    })
+//                    //.transition(DrawableTransitionOptions.withCrossFade())
+//                    .into(mImageView);
         }
     }
 

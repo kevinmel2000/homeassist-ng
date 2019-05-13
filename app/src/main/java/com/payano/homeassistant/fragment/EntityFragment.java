@@ -151,10 +151,10 @@ public class EntityFragment extends BaseFragment implements EntityInterface {
         };
         mSafeObserver = new SafeObserver<>(observer);
 
-        ((MainActivity) getActivity()).getEventSubject()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mSafeObserver);
+//        ((MainActivity) getActivity()).getEventSubject()
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(mSafeObserver);
 
 
         setupRecyclerView(rootView);

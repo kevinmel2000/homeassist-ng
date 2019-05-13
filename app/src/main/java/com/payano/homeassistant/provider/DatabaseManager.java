@@ -10,7 +10,6 @@ import android.util.Log;
 import com.payano.homeassistant.model.DatabaseException;
 import com.payano.homeassistant.model.Entity;
 import com.payano.homeassistant.model.Group;
-import com.payano.homeassistant.model.HomeAssistantServer;
 import com.payano.homeassistant.model.Widget;
 import com.payano.homeassistant.util.CommonUtil;
 import com.google.gson.Gson;
@@ -338,21 +337,21 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return result;
     }
 
-    public long addConnection(HomeAssistantServer server) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues initialValues = new ContentValues();
-        if (server.connectionId != null) {
-            initialValues.put("CONNECTION_ID", server.connectionId);
-        }
-
-        initialValues.put("CONNECTION_NAME", server.getName());
-        initialValues.put("BASE_URL", server.baseurl);
-        initialValues.put("PASSWORD", server.password);
-        long result = db.insert(TABLE_CONNECTION, null, initialValues);
-
-        return result;
-    }
+//    public long addConnection(HomeAssistantServer server) {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//
+//        ContentValues initialValues = new ContentValues();
+//        if (server.connectionId != null) {
+//            initialValues.put("CONNECTION_ID", server.connectionId);
+//        }
+//
+//        initialValues.put("CONNECTION_NAME", server.getName());
+//        initialValues.put("BASE_URL", server.baseurl);
+//        initialValues.put("PASSWORD", server.password);
+//        long result = db.insert(TABLE_CONNECTION, null, initialValues);
+//
+//        return result;
+//    }
 
     public ArrayList<Entity> getDeviceLocations() {
         ArrayList<Entity> results = new ArrayList<>();
@@ -375,26 +374,26 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return results;
     }
 
-    public ArrayList<HomeAssistantServer> getConnections() {
-        ArrayList<HomeAssistantServer> results = new ArrayList<>();
-        // Select All Query
-        String selectQuery = "SELECT * from " + TABLE_CONNECTION + " ORDER BY CONNECTION_ID ASC";
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        Gson gson = new Gson();
-
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                results.add(HomeAssistantServer.getInstance(cursor));
-            } while (cursor.moveToNext());
-        }
-
-        // closing connection
-        cursor.close();
-        return results;
-    }
+//    public ArrayList<HomeAssistantServer> getConnections() {
+//        ArrayList<HomeAssistantServer> results = new ArrayList<>();
+//        // Select All Query
+//        String selectQuery = "SELECT * from " + TABLE_CONNECTION + " ORDER BY CONNECTION_ID ASC";
+//
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        Cursor cursor = db.rawQuery(selectQuery, null);
+//        Gson gson = new Gson();
+//
+//        // looping through all rows and adding to list
+//        if (cursor.moveToFirst()) {
+//            do {
+//                results.add(HomeAssistantServer.getInstance(cursor));
+//            } while (cursor.moveToNext());
+//        }
+//
+//        // closing connection
+//        cursor.close();
+//        return results;
+//    }
 
 
     public ArrayList<Entity> getEntitiesByGroup(int groupId) {
@@ -422,18 +421,18 @@ public class DatabaseManager extends SQLiteOpenHelper {
         // Select All Query
         String selectQuery = "SELECT * from " + TABLE_GROUP + " ORDER BY GROUP_DISPLAY_ORDER ASC";
 
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                results.add(Group.getInstance(cursor));
-            } while (cursor.moveToNext());
-        }
-
-        // closing connection
-        cursor.close();
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        Cursor cursor = db.rawQuery(selectQuery, null);
+//
+//        // looping through all rows and adding to list
+//        if (cursor.moveToFirst()) {
+//            do {
+//                results.add(Group.getInstance(cursor));
+//            } while (cursor.moveToNext());
+//        }
+//
+//        // closing connection
+//        cursor.close();
         return results;
     }
 

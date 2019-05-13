@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 
 import com.payano.homeassistant.R;
 import com.payano.homeassistant.model.Entity;
-import com.payano.homeassistant.model.HomeAssistantServer;
 import com.payano.homeassistant.provider.ServiceProvider;
 import com.payano.homeassistant.util.CommonUtil;
 import com.payano.homeassistant.util.FaultUtil;
@@ -44,13 +43,13 @@ public class SensorFragment extends BaseControlFragment implements View.OnClickL
     private LineChartView mChart;
     private ViewGroup mEmptyView;
     private ViewGroup mConnErrorView;
-    private HomeAssistantServer mServer;
+//    private HomeAssistantServer mServer;
 
-    public static SensorFragment newInstance(Entity entity, HomeAssistantServer server) {
+    public static SensorFragment newInstance(Entity entity) {
         SensorFragment fragment = new SensorFragment();
         Bundle args = new Bundle();
         args.putString("entity", CommonUtil.deflate(entity));
-        args.putString("server", CommonUtil.deflate(server));
+//        args.putString("server", CommonUtil.deflate(server));
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,7 +58,7 @@ public class SensorFragment extends BaseControlFragment implements View.OnClickL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mServer = CommonUtil.inflate(getArguments().getString("server"), HomeAssistantServer.class);
+//        mServer = CommonUtil.inflate(getArguments().getString("server"), HomeAssistantServer.class);
     }
 
     @NonNull
@@ -86,49 +85,47 @@ public class SensorFragment extends BaseControlFragment implements View.OnClickL
     public void callService() {
         if (mCall == null) {
             mProgressBar.setVisibility(View.VISIBLE);
-            mCall = ServiceProvider.getApiService(mServer.getBaseUrl()).getHistory(mServer.getBearerHeader(), mEntity.entityId);
-            mCall.enqueue(new Callback<ArrayList<ArrayList<Entity>>>() {
-                @Override
-                public void onResponse(@NonNull Call<ArrayList<ArrayList<Entity>>> call, @NonNull Response<ArrayList<ArrayList<Entity>>> response) {
-                    mCall = null;
-                    mProgressBar.setVisibility(View.GONE);
-
-                    if (FaultUtil.isRetrofitServerError(response)) {
-                        Log.d("YouQi", response.message());
-//                        showError(response.message());
-                        return;
-                    }
-
-                    ArrayList<ArrayList<Entity>> restResponse = response.body();
-                    //CommonUtil.logLargeString("YouQi", "HISTORY restResponse: " + CommonUtil.deflate(restResponse));
-                    if (restResponse != null && restResponse.size() > 0) {
-                        ArrayList<Entity> histories = restResponse.get(0);
-                        if (histories.size() <= 1) {
-                            mEmptyView.setVisibility(View.VISIBLE);
-                        } else {
-                            setupChart(restResponse.get(0));
-                        }
-                    } else {
-                        mEmptyView.setVisibility(View.VISIBLE);
-                    }
-
-
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<ArrayList<ArrayList<Entity>>> call, @NonNull Throwable t) {
-                    mCall = null;
-                    mProgressBar.setVisibility(View.GONE);
-
-                    mConnErrorView.setVisibility(View.VISIBLE);
-
-                    Activity activity = getActivity();
-                    if (activity != null && !activity.isFinishing()) {
-                        Log.d("YouQi", FaultUtil.getPrintableMessage(getActivity(), t));
-                    }
-//                    showError(FaultUtil.getPrintableMessage(t));
-                }
-            });
+//            mCall = ServiceProvider.getApiService(mServer.getBaseUrl()).getHistory(mServer.getBearerHeader(), mEntity.entityId);
+//            mCall.enqueue(new Callback<ArrayList<ArrayList<Entity>>>() {
+//                @Override
+//                public void onResponse(@NonNull Call<ArrayList<ArrayList<Entity>>> call, @NonNull Response<ArrayList<ArrayList<Entity>>> response) {
+//                    mCall = null;
+//                    mProgressBar.setVisibility(View.GONE);
+//
+//                    if (FaultUtil.isRetrofitServerError(response)) {
+//                        Log.d("YouQi", response.message());
+////                        showError(response.message());
+//                        return;
+//                    }
+//
+//                    ArrayList<ArrayList<Entity>> restResponse = response.body();
+//                    //CommonUtil.logLargeString("YouQi", "HISTORY restResponse: " + CommonUtil.deflate(restResponse));
+//                    if (restResponse != null && restResponse.size() > 0) {
+//                        ArrayList<Entity> histories = restResponse.get(0);
+//                        if (histories.size() <= 1) {
+//                            mEmptyView.setVisibility(View.VISIBLE);
+//                        } else {
+//                            setupChart(restResponse.get(0));
+//                        }
+//                    } else {
+//                        mEmptyView.setVisibility(View.VISIBLE);
+//                  }
+//                }
+//
+//                @Override
+//                public void onFailure(@NonNull Call<ArrayList<ArrayList<Entity>>> call, @NonNull Throwable t) {
+//                    mCall = null;
+//                    mProgressBar.setVisibility(View.GONE);
+//
+//                    mConnErrorView.setVisibility(View.VISIBLE);
+//
+//                    Activity activity = getActivity();
+//                    if (activity != null && !activity.isFinishing()) {
+//                        Log.d("YouQi", FaultUtil.getPrintableMessage(getActivity(), t));
+//                    }
+////                    showError(FaultUtil.getPrintableMessage(t));
+//                }
+//            });
         }
 
         //ContentValues values = new ContentValues();

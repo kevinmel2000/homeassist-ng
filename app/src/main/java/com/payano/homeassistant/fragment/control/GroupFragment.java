@@ -19,15 +19,12 @@ import android.widget.TextView;
 
 import com.payano.homeassistant.R;
 import com.payano.homeassistant.model.Entity;
-import com.payano.homeassistant.model.HomeAssistantServer;
 import com.payano.homeassistant.model.rest.CallServiceRequest;
 import com.payano.homeassistant.model.rest.RxPayload;
 import com.payano.homeassistant.provider.DatabaseManager;
 import com.payano.homeassistant.shared.EntityProcessInterface;
 import com.payano.homeassistant.util.CommonUtil;
 import com.payano.homeassistant.util.EntityHandlerHelper;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,16 +36,16 @@ public class GroupFragment extends BaseControlFragment implements View.OnClickLi
 
     private Call<ArrayList<ArrayList<Entity>>> mCall;
     private View mProgressBar;
-    private HomeAssistantServer mServer;
+//    private HomeAssistantServer mServer;
     private RecyclerView mRecyclerView;
     private EntityRowAdapter mAdapter;
     private ArrayList<Entity> mItems = new ArrayList<>();
 
-    public static GroupFragment newInstance(Entity entity, HomeAssistantServer server) {
+    public static GroupFragment newInstance(Entity entity) {
         GroupFragment fragment = new GroupFragment();
         Bundle args = new Bundle();
         args.putString("entity", CommonUtil.deflate(entity));
-        args.putString("server", CommonUtil.deflate(server));
+//        args.putString("server", CommonUtil.deflate(server));
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,7 +53,7 @@ public class GroupFragment extends BaseControlFragment implements View.OnClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mServer = CommonUtil.inflate(getArguments().getString("server"), HomeAssistantServer.class);
+//        mServer = CommonUtil.inflate(getArguments().getString("server"), HomeAssistantServer.class);
     }
 
     @NonNull

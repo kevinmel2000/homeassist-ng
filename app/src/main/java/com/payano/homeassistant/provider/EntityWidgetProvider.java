@@ -10,11 +10,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,17 +20,13 @@ import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.payano.homeassistant.AppController;
-import com.payano.homeassistant.EditActivity;
 import com.payano.homeassistant.R;
 import com.payano.homeassistant.TransparentActivity;
 import com.payano.homeassistant.model.Entity;
-import com.payano.homeassistant.model.HomeAssistantServer;
-import com.payano.homeassistant.model.MDIFont;
 import com.payano.homeassistant.model.Widget;
 import com.payano.homeassistant.util.CommonUtil;
 import com.payano.homeassistant.util.FaultUtil;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -111,8 +104,8 @@ public class EntityWidgetProvider extends AppWidgetProvider {
         Log.d("YouQi", "Widget onUpdate");
         final DatabaseManager databaseManager = DatabaseManager.getInstance(context);
         final SharedPreferences mSharedPref = ((AppController) context.getApplicationContext()).getSharedPref();
-        final ArrayList<HomeAssistantServer> mServers = databaseManager.getConnections();
-        final HomeAssistantServer mCurrentServer = mServers.get(mSharedPref.getInt("connectionIndex", 0));
+//        final ArrayList<HomeAssistantServer> mServers = databaseManager.getConnections();
+//        final HomeAssistantServer mCurrentServer = mServers.get(mSharedPref.getInt("connectionIndex", 0));
 
         for (final int appWidgetId : appWidgetIds) {
             Log.d("YouQi", "Widget onUpdate appWidgetId: " + appWidgetId);
@@ -120,31 +113,31 @@ public class EntityWidgetProvider extends AppWidgetProvider {
             if (widget != null) {
                 //updateEntityWidget(context, widget);
 
-                if (mCurrentServer != null) {
-                    Call<Entity> mCall = ServiceProvider.getApiService(mCurrentServer.getBaseUrl()).getState(mCurrentServer.getBearerHeader(), widget.entityId);
-                    mCall.enqueue(new Callback<Entity>() {
-                        @Override
-                        public void onResponse(@NonNull Call<Entity> call, @NonNull Response<Entity> response) {
-                            if (FaultUtil.isRetrofitServerError(response)) {
-                                return;
-                            }
-
-                            Entity restResponse = response.body();
-                            if (restResponse != null) {
-                                context.getContentResolver().update(Uri.parse("content://com.payano.homeassistant.provider.EntityContentProvider/"), restResponse.getContentValues(), "ENTITY_ID='" + restResponse.entityId + "'", null);
-                                Widget newWidget = databaseManager.getWidgetById(appWidgetId);
-                                updateEntityWidget(context, newWidget);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(@NonNull Call<Entity> call, @NonNull Throwable t) {
-                            updateEntityWidget(context, widget);
-                        }
-                    });
-                } else {
-                    updateEntityWidget(context, widget);
-                }
+//                if (mCurrentServer != null) {
+//                    Call<Entity> mCall = ServiceProvider.getApiService(mCurrentServer.getBaseUrl()).getState(mCurrentServer.getBearerHeader(), widget.entityId);
+//                    mCall.enqueue(new Callback<Entity>() {
+//                        @Override
+//                        public void onResponse(@NonNull Call<Entity> call, @NonNull Response<Entity> response) {
+//                            if (FaultUtil.isRetrofitServerError(response)) {
+//                                return;
+//                            }
+//
+//                            Entity restResponse = response.body();
+//                            if (restResponse != null) {
+//                                context.getContentResolver().update(Uri.parse("content://com.payano.homeassistant.provider.EntityContentProvider/"), restResponse.getContentValues(), "ENTITY_ID='" + restResponse.entityId + "'", null);
+//                                Widget newWidget = databaseManager.getWidgetById(appWidgetId);
+//                                updateEntityWidget(context, newWidget);
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFailure(@NonNull Call<Entity> call, @NonNull Throwable t) {
+//                            updateEntityWidget(context, widget);
+//                        }
+//                    });
+//                } else {
+//                    updateEntityWidget(context, widget);
+//                }
 
             } else {
                 Log.d("YouQi", "shit happend!");

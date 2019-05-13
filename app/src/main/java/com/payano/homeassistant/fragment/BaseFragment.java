@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.payano.homeassistant.AppController;
 import com.payano.homeassistant.MainActivity;
-import com.payano.homeassistant.model.HomeAssistantServer;
 import com.payano.homeassistant.model.rest.CallServiceRequest;
 import com.crashlytics.android.Crashlytics;
 
@@ -35,7 +34,7 @@ public class BaseFragment extends Fragment {
     public void callService(final String domain, final String service, CallServiceRequest serviceRequest) {
         Activity app = getActivity();
         if (app instanceof MainActivity) {
-            ((MainActivity) app).callService(domain, service, serviceRequest);
+//            ((MainActivity) app).callService(domain, service, serviceRequest);
             return;
         }
         throw new RuntimeException("Unsupported Activity");
@@ -57,19 +56,19 @@ public class BaseFragment extends Fragment {
     public void showToast(String message) {
         Activity app = getActivity();
         if (app instanceof MainActivity) {
-            ((MainActivity) app).showToast(message);
+//            ((MainActivity) app).showToast(message);
             return;
         }
         throw new RuntimeException("Unsupported Activity");
     }
 
-    public HomeAssistantServer getServer() {
-        Activity app = getActivity();
-        if (app instanceof MainActivity) {
-            return ((MainActivity) app).getServer();
-        }
-        throw new RuntimeException("Unsupported Activity");
-    }
+//    public HomeAssistantServer getServer() {
+//        Activity app = getActivity();
+//        if (app instanceof MainActivity) {
+//            return ((MainActivity) app).getServer();
+//        }
+//        throw new RuntimeException("Unsupported Activity");
+//    }
 
 }
 

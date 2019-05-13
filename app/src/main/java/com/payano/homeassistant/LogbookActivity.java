@@ -25,7 +25,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.payano.homeassistant.model.Entity;
-import com.payano.homeassistant.model.HomeAssistantServer;
 import com.payano.homeassistant.model.LogSheet;
 import com.payano.homeassistant.model.MDIFont;
 import com.payano.homeassistant.provider.DatabaseManager;
@@ -51,7 +50,7 @@ import retrofit2.Response;
 
 public class LogbookActivity extends AppCompatActivity {
 
-    HomeAssistantServer mCurrentServer;
+//    HomeAssistantServer mCurrentServer;
     private Call<ArrayList<LogSheet>> mCall;
     private ProgressBar mProgressBar;
     private View mEmptyList;
@@ -72,30 +71,30 @@ public class LogbookActivity extends AppCompatActivity {
         Bundle params = new Bundle();
         params.putString("name", this.getClass().getName());
 
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            mCurrentServer = CommonUtil.inflate(bundle.getString("server", ""), HomeAssistantServer.class);
-        }
-
-        final Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(getString(R.string.menu_logbook));
-        }
-
-        setupRecyclerView();
-        refreshApi();
+//        Bundle bundle = getIntent().getExtras();
+//        if (bundle != null) {
+//            mCurrentServer = CommonUtil.inflate(bundle.getString("server", ""), HomeAssistantServer.class);
+//        }
+//
+//        final Toolbar toolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//        if (getSupportActionBar() != null) {
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//            getSupportActionBar().setTitle(getString(R.string.menu_logbook));
+//        }
+//
+//        setupRecyclerView();
+//        refreshApi();
     }
 
     public void setupRecyclerView() {
         mSwipeRefresh = findViewById(R.id.swipe_refresh_layout);
-        mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshApi();
-            }
-        });
+//        mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                refreshApi();
+//            }
+//        });
 
 
         mRecyclerView = findViewById(R.id.recycler_view);
@@ -125,72 +124,72 @@ public class LogbookActivity extends AppCompatActivity {
         }
     }
 
-    public void refreshApi() {
-        DateFormat df = (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH));
-        df.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-        Date currentDate = Calendar.getInstance().getTime();
-        Calendar now = Calendar.getInstance();
-        now.set(Calendar.HOUR_OF_DAY, 0);
-        now.set(Calendar.MINUTE, 0);
-        now.set(Calendar.SECOND, 0);
-        now.set(Calendar.MILLISECOND, 0);
-        Log.d("YouQi", "Date: " + df.format(now.getTime()));
-
-        if (mCall == null) {
-            //showNetworkBusy();
-            mCall = ServiceProvider.getApiService(mCurrentServer.getBaseUrl()).getLogbook(mCurrentServer.getBearerHeader(), df.format(now.getTime()));
-            mCall.enqueue(new Callback<ArrayList<LogSheet>>() {
-                @Override
-                public void onResponse(@NonNull Call<ArrayList<LogSheet>> call, @NonNull Response<ArrayList<LogSheet>> response) {
-                    mCall = null;
-                    showNetworkIdle();
-                    mConnError.setVisibility(View.GONE);
-
-                    if (FaultUtil.isRetrofitServerError(response)) {
-                        showError(response.message());
-                        return;
-                    }
-
-                    ArrayList<LogSheet> restResponse = response.body();
-                    CommonUtil.logLargeString("YouQi", "service restResponse: " + CommonUtil.deflate(restResponse));
-
-                    if (restResponse != null) {
-                        if (restResponse.size() == 0) {
-                            mEmptyList.setVisibility(View.VISIBLE);
-                        } else {
-                            mEmptyList.setVisibility(View.GONE);
-
-                            Log.d("YouQi", "restResponse.size: " + restResponse.size());
-
-
-                            Collections.sort(restResponse, new Comparator<LogSheet>() {
-                                @Override
-                                public int compare(LogSheet lhs, LogSheet rhs) {
-                                    return (int) (rhs.when.getTime() - lhs.when.getTime()); //descending order
-                                }
-                            });
-
-                            mAdapter.setItems(restResponse);
-
-                            //for (LogSheet logsheet : restResponse) {
-                            //    Log.d("YouQi", String.format(Locale.ENGLISH, "%s, %s", df2.format(logsheet.when.getTime()), DateUtils.getRelativeTimeSpanString(logsheet.when.getTime())));
-                            //    //getContentResolver().update(Uri.parse("content://com.payano.homeassistant.provider.EntityContentProvider/"), entity.getContentValues(), "ENTITY_ID='" + entity.entityId + "'", null);
-                            //}
-                        }
-                    }
-
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<ArrayList<LogSheet>> call, @NonNull Throwable t) {
-                    mCall = null;
-                    showNetworkIdle();
-                    mConnError.setVisibility(View.VISIBLE);
-                }
-            });
-        }
-    }
+//    public void refreshApi() {
+//        DateFormat df = (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH));
+//        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+//
+//        Date currentDate = Calendar.getInstance().getTime();
+//        Calendar now = Calendar.getInstance();
+//        now.set(Calendar.HOUR_OF_DAY, 0);
+//        now.set(Calendar.MINUTE, 0);
+//        now.set(Calendar.SECOND, 0);
+//        now.set(Calendar.MILLISECOND, 0);
+//        Log.d("YouQi", "Date: " + df.format(now.getTime()));
+//
+//        if (mCall == null) {
+//            //showNetworkBusy();
+//            mCall = ServiceProvider.getApiService(mCurrentServer.getBaseUrl()).getLogbook(mCurrentServer.getBearerHeader(), df.format(now.getTime()));
+//            mCall.enqueue(new Callback<ArrayList<LogSheet>>() {
+//                @Override
+//                public void onResponse(@NonNull Call<ArrayList<LogSheet>> call, @NonNull Response<ArrayList<LogSheet>> response) {
+//                    mCall = null;
+//                    showNetworkIdle();
+//                    mConnError.setVisibility(View.GONE);
+//
+//                    if (FaultUtil.isRetrofitServerError(response)) {
+//                        showError(response.message());
+//                        return;
+//                    }
+//
+//                    ArrayList<LogSheet> restResponse = response.body();
+//                    CommonUtil.logLargeString("YouQi", "service restResponse: " + CommonUtil.deflate(restResponse));
+//
+//                    if (restResponse != null) {
+//                        if (restResponse.size() == 0) {
+//                            mEmptyList.setVisibility(View.VISIBLE);
+//                        } else {
+//                            mEmptyList.setVisibility(View.GONE);
+//
+//                            Log.d("YouQi", "restResponse.size: " + restResponse.size());
+//
+//
+//                            Collections.sort(restResponse, new Comparator<LogSheet>() {
+//                                @Override
+//                                public int compare(LogSheet lhs, LogSheet rhs) {
+//                                    return (int) (rhs.when.getTime() - lhs.when.getTime()); //descending order
+//                                }
+//                            });
+//
+//                            mAdapter.setItems(restResponse);
+//
+//                            //for (LogSheet logsheet : restResponse) {
+//                            //    Log.d("YouQi", String.format(Locale.ENGLISH, "%s, %s", df2.format(logsheet.when.getTime()), DateUtils.getRelativeTimeSpanString(logsheet.when.getTime())));
+//                            //    //getContentResolver().update(Uri.parse("content://com.payano.homeassistant.provider.EntityContentProvider/"), entity.getContentValues(), "ENTITY_ID='" + entity.entityId + "'", null);
+//                            //}
+//                        }
+//                    }
+//
+//                }
+//
+//                @Override
+//                public void onFailure(@NonNull Call<ArrayList<LogSheet>> call, @NonNull Throwable t) {
+//                    mCall = null;
+//                    showNetworkIdle();
+//                    mConnError.setVisibility(View.VISIBLE);
+//                }
+//            });
+//        }
+//    }
 
     private void showError(String message) {
         mConnError.setVisibility(View.VISIBLE);

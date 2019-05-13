@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.payano.homeassistant.AppController;
 import com.payano.homeassistant.R;
 import com.payano.homeassistant.model.Entity;
-import com.payano.homeassistant.model.HomeAssistantServer;
 import com.payano.homeassistant.shared.GlideApp;
 import com.payano.homeassistant.util.CommonUtil;
 import com.bumptech.glide.load.DataSource;
@@ -40,7 +39,7 @@ public class CameraFragment extends BaseControlFragment implements View.OnClickL
 
     private Call<ArrayList<ArrayList<Entity>>> mCall;
     private View mProgressBar;
-    private HomeAssistantServer mServer;
+//    private HomeAssistantServer mServer;
     private SharedPreferences mSharedPref;
     private String mFullUri;
     private String mPassword;
@@ -50,11 +49,11 @@ public class CameraFragment extends BaseControlFragment implements View.OnClickL
     private TextView mAlertView;
     private TextView mErrorTextView;
 
-    public static CameraFragment newInstance(Entity entity, HomeAssistantServer server) {
+    public static CameraFragment newInstance(Entity entity) {
         CameraFragment fragment = new CameraFragment();
         Bundle args = new Bundle();
         args.putString("entity", CommonUtil.deflate(entity));
-        args.putString("server", CommonUtil.deflate(server));
+//        args.putString("server", CommonUtil.deflate(server));
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,7 +61,7 @@ public class CameraFragment extends BaseControlFragment implements View.OnClickL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mServer = CommonUtil.inflate(getArguments().getString("server"), HomeAssistantServer.class);
+//        mServer = CommonUtil.inflate(getArguments().getString("server"), HomeAssistantServer.class);
     }
 
     @NonNull
@@ -104,42 +103,42 @@ public class CameraFragment extends BaseControlFragment implements View.OnClickL
         mProgressBar.setVisibility(View.VISIBLE);
         //mImageView.setVisibility(View.INVISIBLE);
 
-        mImageView.setImageResource(android.R.color.transparent);
-        Crashlytics.log("camera url: " + mServer.getBaseUrl() + mEntity.attributes.entityPicture);
-
-        GlideApp.with(getActivity())
-                .load(mServer.getBaseUrl() + mEntity.attributes.entityPicture)
-                .skipMemoryCache(true)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        mConnErrorView.setVisibility(View.VISIBLE);
-                        mProgressBar.setVisibility(View.GONE);
-                        Crashlytics.logException(e);
-                        e.printStackTrace();
-
-                        StringWriter sw = new StringWriter();
-                        PrintWriter pw = new PrintWriter(sw);
-                        e.printStackTrace(pw);
-                        mAlertView.setTag(mServer.getBaseUrl() + mEntity.attributes.entityPicture + "\n\n" + sw.toString());
-
-                        //mErrorTextView.setText(e.getMessage());
-                        mAlertView.setVisibility(View.VISIBLE);
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        mConnErrorView.setVisibility(View.GONE);
-                        mProgressBar.setVisibility(View.GONE);
-                        mImageView.setVisibility(View.VISIBLE);
-                        mAlertView.setVisibility(View.GONE);
-                        return false;
-                    }
-                })
-                //.transition(DrawableTransitionOptions.withCrossFade())
-                .into(mImageView);
+//        mImageView.setImageResource(android.R.color.transparent);
+//        Crashlytics.log("camera url: " + mServer.getBaseUrl() + mEntity.attributes.entityPicture);
+//
+//        GlideApp.with(getActivity())
+//                .load(mServer.getBaseUrl() + mEntity.attributes.entityPicture)
+//                .skipMemoryCache(true)
+//                .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                .listener(new RequestListener<Drawable>() {
+//                    @Override
+//                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//                        mConnErrorView.setVisibility(View.VISIBLE);
+//                        mProgressBar.setVisibility(View.GONE);
+//                        Crashlytics.logException(e);
+//                        e.printStackTrace();
+//
+//                        StringWriter sw = new StringWriter();
+//                        PrintWriter pw = new PrintWriter(sw);
+//                        e.printStackTrace(pw);
+//                        mAlertView.setTag(mServer.getBaseUrl() + mEntity.attributes.entityPicture + "\n\n" + sw.toString());
+//
+//                        //mErrorTextView.setText(e.getMessage());
+//                        mAlertView.setVisibility(View.VISIBLE);
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+//                        mConnErrorView.setVisibility(View.GONE);
+//                        mProgressBar.setVisibility(View.GONE);
+//                        mImageView.setVisibility(View.VISIBLE);
+//                        mAlertView.setVisibility(View.GONE);
+//                        return false;
+//                    }
+//                })
+//                //.transition(DrawableTransitionOptions.withCrossFade())
+//                .into(mImageView);
     }
 
     @Override

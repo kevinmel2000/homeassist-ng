@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.payano.homeassistant.MainActivity;
 import com.payano.homeassistant.R;
-import com.payano.homeassistant.model.HomeAssistantServer;
 import com.payano.homeassistant.provider.DatabaseManager;
 import com.payano.homeassistant.provider.ServiceProvider;
 import com.payano.homeassistant.util.CommonUtil;
@@ -35,12 +34,12 @@ public class ConnectionFragment extends DialogFragment implements View.OnClickLi
     private TextView mBaseUrl;
     private TextView mPassword;
     private BlurDialogEngine mBlurEngine;
-    private HomeAssistantServer mConnection;
+//    private HomeAssistantServer mConnection;
 
-    public static ConnectionFragment newInstance(HomeAssistantServer connection) {
+    public static ConnectionFragment newInstance() {
         ConnectionFragment fragment = new ConnectionFragment();
         Bundle args = new Bundle();
-        args.putString("connection", CommonUtil.deflate(connection));
+//        args.putString("connection", CommonUtil.deflate(connection));
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,7 +48,7 @@ public class ConnectionFragment extends DialogFragment implements View.OnClickLi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        mConnection = CommonUtil.inflate(args.getString("connection"), HomeAssistantServer.class);
+//        mConnection = CommonUtil.inflate(args.getString("connection"), HomeAssistantServer.class);
     }
 
     @NonNull
@@ -91,10 +90,10 @@ public class ConnectionFragment extends DialogFragment implements View.OnClickLi
         //https://stackoverflow.com/questions/23786033/dialogfragment-and-ondismiss
         final Activity activity = getActivity();
 
-        Log.d("YouQi", "onDismiss ConnectionFragment");
-        if (activity instanceof MainActivity) {
-            ((MainActivity) activity).refreshConnections();
-        }
+//        Log.d("YouQi", "onDismiss ConnectionFragment");
+//        if (activity instanceof MainActivity) {
+//            ((MainActivity) activity).refreshConnections();
+//        }
     }
 
     @Override
@@ -167,37 +166,37 @@ public class ConnectionFragment extends DialogFragment implements View.OnClickLi
         if (cancel) {
             focusView.requestFocus();
         } else {
-            HomeAssistantServer connection = new HomeAssistantServer(baseURL, password);
-            connection.name = name;
-            testConnection(connection);
+//            HomeAssistantServer connection = new HomeAssistantServer(baseURL, password);
+//            connection.name = name;
+//            testConnection(connection);
         }
     }
 
-    private void testConnection(final HomeAssistantServer connection) {
-        ServiceProvider.getRawApiService(connection.getBaseUrl()).rawStates(connection.getBearerHeader())
-                .enqueue(new Callback<String>() {
-                    @Override
-                    public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
-                        if (FaultUtil.isRetrofitServerError(response)) {
-                            showError(response.message());
-                            return;
-                        }
-
-                        Activity activity = getActivity();
-                        if (activity != null && !activity.isFinishing()) {
-                            DatabaseManager.getInstance(activity).addConnection(connection);
-                            dismiss();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
-                        Activity activity = getActivity();
-                        if (activity != null && !activity.isFinishing()) {
-                            showError(FaultUtil.getPrintableMessage(activity, t));
-                        }
-                    }
-                });
+    private void testConnection() {
+//        ServiceProvider.getRawApiService(connection.getBaseUrl()).rawStates(connection.getBearerHeader())
+//                .enqueue(new Callback<String>() {
+//                    @Override
+//                    public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+//                        if (FaultUtil.isRetrofitServerError(response)) {
+//                            showError(response.message());
+//                            return;
+//                        }
+//
+//                        Activity activity = getActivity();
+//                        if (activity != null && !activity.isFinishing()) {
+//                            DatabaseManager.getInstance(activity).addConnection(connection);
+//                            dismiss();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+//                        Activity activity = getActivity();
+//                        if (activity != null && !activity.isFinishing()) {
+//                            showError(FaultUtil.getPrintableMessage(activity, t));
+//                        }
+//                    }
+//                });
     }
 
     public void showError(final String status) {

@@ -129,8 +129,6 @@
         <!-- </intent-filter> -->
         <!-- </service> -->
 
-        <service android:name="com.payano.homeassistant.service.DataSyncService" />
-
         <activity android:name="com.payano.homeassistant.FingerprintActivity"></activity>
     </application>
 

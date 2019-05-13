@@ -15,14 +15,12 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.payano.homeassistant.model.Entity;
-import com.payano.homeassistant.model.HomeAssistantServer;
 import com.payano.homeassistant.model.Widget;
 import com.payano.homeassistant.model.rest.CallServiceRequest;
 import com.payano.homeassistant.model.rest.RxPayload;
 import com.payano.homeassistant.provider.DatabaseManager;
 import com.payano.homeassistant.provider.EntityWidgetProvider;
 import com.payano.homeassistant.provider.ServiceProvider;
-import com.payano.homeassistant.service.DataSyncService;
 import com.payano.homeassistant.shared.EntityProcessInterface;
 import com.payano.homeassistant.shared.EventEmitterInterface;
 import com.payano.homeassistant.util.CommonUtil;
@@ -48,89 +46,85 @@ public class TransparentActivity extends BaseActivity implements DialogInterface
     private Entity mEntity;
     private Call<ArrayList<Entity>> mCall;
     private int mWidgetId;
-    private HomeAssistantServer mCurrentServer;
-    private ArrayList<HomeAssistantServer> mServers;
+    //private HomeAssistantServer mCurrentServer;
+    //private ArrayList<HomeAssistantServer> mServers;
     private Toast mToast;
     private boolean isJobComplete = false;
 
     //Bound Service (Experimental)
     private Subject<RxPayload> mEventEmitter = PublishSubject.create();
-    private DataSyncService mService;
+//    private DataSyncService mService;
     private SafeObserver<RxPayload> mSafeObserver;
     private boolean mBound;
-    private ServiceConnection mConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
-            DataSyncService.LocalBinder binder = (DataSyncService.LocalBinder) service;
-            mService = binder.getService();
-            mBound = true;
-
-            if (mSharedPref.getBoolean("websocket_mode", true)) {
-                mService.startWebSocket(mCurrentServer, true);
-            }
-
-            mSafeObserver = new SafeObserver<>(TransparentActivity.this);
-            binder.getEventSubject()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(mSafeObserver);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            mBound = false;
-        }
-    };
+//    private ServiceConnection mConnection = new ServiceConnection() {
+//        @Override
+//        public void onServiceConnected(ComponentName className, IBinder service) {
+//            // We've bound to LocalService, cast the IBinder and get LocalService instance
+//            DataSyncService.LocalBinder binder = (DataSyncService.LocalBinder) service;
+//            mService = binder.getService();
+//            mBound = true;
+//
+//            if (mSharedPref.getBoolean("websocket_mode", true)) {
+//                mService.startWebSocket(mCurrentServer, true);
+//            }
+//
+//            mSafeObserver = new SafeObserver<>(TransparentActivity.this);
+//            binder.getEventSubject()
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe(mSafeObserver);
+//        }
+//
+//        @Override
+//        public void onServiceDisconnected(ComponentName arg0) {
+//            mBound = false;
+//        }
+//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mSharedPref = getAppController().getSharedPref();
-        mServers = DatabaseManager.getInstance(this).getConnections();
-        mCurrentServer = mServers.get(mSharedPref.getInt("connectionIndex", 0));
-        mWidgetId = getIntent().getIntExtra("appWidgetId", 0);
+//        mServers = DatabaseManager.getInstance(this).getConnections();
+//        mCurrentServer = mServers.get(mSharedPref.getInt("connectionIndex", 0));
+//        mWidgetId = getIntent().getIntExtra("appWidgetId", 0);
+//
+//        String json = getIntent().getExtras().getString("entity");
+//        mEntity = CommonUtil.inflate(json, Entity.class);
+//        final Entity entity = mEntity;
 
-        String json = getIntent().getExtras().getString("entity");
-        mEntity = CommonUtil.inflate(json, Entity.class);
-        final Entity entity = mEntity;
+//        if (entity != null) {
+//            if (entity.isSwitch() || entity.isLight() || entity.isFan() || entity.isScript() || entity.isInputBoolean()) {
+//                callService("homeassistant", entity.getNextState(), new CallServiceRequest(entity.entityId));
+//                isJobComplete = true;
+//            } else {
+//                EntityHandlerHelper.onEntityLongClick(this, entity);
+//            }
+//
+//            Call<Entity> mCall = ServiceProvider.getApiService(mCurrentServer.getBaseUrl()).getState(mCurrentServer.getBearerHeader(), mEntity.entityId);
+//            mCall.enqueue(new Callback<Entity>() {
+//                @Override
+//                public void onResponse(@NonNull Call<Entity> call, @NonNull Response<Entity> response) {
+//                    if (FaultUtil.isRetrofitServerError(response)) {
+//                        return;
+//                    }
+//
+//                    Entity restResponse = response.body();
+//                    if (restResponse != null) {
+//                        getContentResolver().update(Uri.parse("content://com.payano.homeassistant.provider.EntityContentProvider/"), restResponse.getContentValues(), "ENTITY_ID='" + restResponse.entityId + "'", null);
+//                        Widget newWidget = DatabaseManager.getInstance(TransparentActivity.this).getWidgetById(mWidgetId);
+//                        EntityWidgetProvider.updateEntityWidget(TransparentActivity.this, newWidget);
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(@NonNull Call<Entity> call, @NonNull Throwable t) {
+//                    showToast("Widget Refresh Failed");
+//                }
+//            });
 
-        if (entity != null) {
-            if (entity.isSwitch() || entity.isLight() || entity.isFan() || entity.isScript() || entity.isInputBoolean()) {
-                callService("homeassistant", entity.getNextState(), new CallServiceRequest(entity.entityId));
-                isJobComplete = true;
-            } else {
-                EntityHandlerHelper.onEntityLongClick(this, entity);
-            }
-
-            Call<Entity> mCall = ServiceProvider.getApiService(mCurrentServer.getBaseUrl()).getState(mCurrentServer.getBearerHeader(), mEntity.entityId);
-            mCall.enqueue(new Callback<Entity>() {
-                @Override
-                public void onResponse(@NonNull Call<Entity> call, @NonNull Response<Entity> response) {
-                    if (FaultUtil.isRetrofitServerError(response)) {
-                        return;
-                    }
-
-                    Entity restResponse = response.body();
-                    if (restResponse != null) {
-                        getContentResolver().update(Uri.parse("content://com.payano.homeassistant.provider.EntityContentProvider/"), restResponse.getContentValues(), "ENTITY_ID='" + restResponse.entityId + "'", null);
-                        Widget newWidget = DatabaseManager.getInstance(TransparentActivity.this).getWidgetById(mWidgetId);
-                        EntityWidgetProvider.updateEntityWidget(TransparentActivity.this, newWidget);
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<Entity> call, @NonNull Throwable t) {
-                    showToast("Widget Refresh Failed");
-                }
-            });
-
-        }
-    }
-
-    public HomeAssistantServer getServer() {
-        return mCurrentServer;
+//        }
     }
 
     @Override
@@ -151,49 +145,49 @@ public class TransparentActivity extends BaseActivity implements DialogInterface
         Log.d("YouQi", String.format(Locale.ENGLISH, "callService(%s, %s) in TransparentActivity: %s", domain, service, CommonUtil.deflate(serviceRequest)));
         if (mCall == null) {
             //showNetworkBusy();
-            mCall = ServiceProvider.getApiService(mCurrentServer.getBaseUrl()).callService(mCurrentServer.getBearerHeader(), domain, service, serviceRequest);
-            mCall.enqueue(new Callback<ArrayList<Entity>>() {
-                @Override
-                public void onResponse(@NonNull Call<ArrayList<Entity>> call, @NonNull Response<ArrayList<Entity>> response) {
-                    mCall = null;
-                    //showNetworkIdle();
-
-                    if (FaultUtil.isRetrofitServerError(response)) {
-                        //showError(response.message());
-                        return;
-                    }
-
-                    ArrayList<Entity> restResponse = response.body();
-                    //CommonUtil.logLargeString("YouQi", "service restResponse: " + CommonUtil.deflate(restResponse));
-
-                    if ("script".equals(domain) || ("automation".equals(domain) || "scene".equals(domain) || "trigger".equals(service))) {
-                        showToast(getString(R.string.toast_triggered));
-                    }
-
-                    if (restResponse != null) {
-                        for (Entity entity : restResponse) {
-                            getContentResolver().update(Uri.parse("content://com.payano.homeassistant.provider.EntityContentProvider/"), entity.getContentValues(), "ENTITY_ID='" + entity.entityId + "'", null);
-
-                            if (entity.equals(mEntity)) {
-                                Widget widget = Widget.getInstance(entity, mWidgetId);
-                                EntityWidgetProvider.updateEntityWidget(TransparentActivity.this, widget);
-                            }
-                        }
-                    }
-                    Log.d("YouQi", "callService JobCompleted");
-                    if (isJobComplete) finish();
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<ArrayList<Entity>> call, @NonNull Throwable t) {
-                    mCall = null;
-
-                    showToast(FaultUtil.getPrintableMessage(TransparentActivity.this, t));
-                    if (isJobComplete) finish();
-                    //showNetworkIdle();
-                    //showError(FaultUtil.getPrintableMessage(MainActivity.this, t));
-                }
-            });
+//            mCall = ServiceProvider.getApiService(mCurrentServer.getBaseUrl()).callService(mCurrentServer.getBearerHeader(), domain, service, serviceRequest);
+//            mCall.enqueue(new Callback<ArrayList<Entity>>() {
+//                @Override
+//                public void onResponse(@NonNull Call<ArrayList<Entity>> call, @NonNull Response<ArrayList<Entity>> response) {
+//                    mCall = null;
+//                    //showNetworkIdle();
+//
+//                    if (FaultUtil.isRetrofitServerError(response)) {
+//                        //showError(response.message());
+//                        return;
+//                    }
+//
+//                    ArrayList<Entity> restResponse = response.body();
+//                    //CommonUtil.logLargeString("YouQi", "service restResponse: " + CommonUtil.deflate(restResponse));
+//
+//                    if ("script".equals(domain) || ("automation".equals(domain) || "scene".equals(domain) || "trigger".equals(service))) {
+//                        showToast(getString(R.string.toast_triggered));
+//                    }
+//
+//                    if (restResponse != null) {
+//                        for (Entity entity : restResponse) {
+//                            getContentResolver().update(Uri.parse("content://com.payano.homeassistant.provider.EntityContentProvider/"), entity.getContentValues(), "ENTITY_ID='" + entity.entityId + "'", null);
+//
+//                            if (entity.equals(mEntity)) {
+//                                Widget widget = Widget.getInstance(entity, mWidgetId);
+//                                EntityWidgetProvider.updateEntityWidget(TransparentActivity.this, widget);
+//                            }
+//                        }
+//                    }
+//                    Log.d("YouQi", "callService JobCompleted");
+//                    if (isJobComplete) finish();
+//                }
+//
+//                @Override
+//                public void onFailure(@NonNull Call<ArrayList<Entity>> call, @NonNull Throwable t) {
+//                    mCall = null;
+//
+//                    showToast(FaultUtil.getPrintableMessage(TransparentActivity.this, t));
+//                    if (isJobComplete) finish();
+//                    //showNetworkIdle();
+//                    //showError(FaultUtil.getPrintableMessage(MainActivity.this, t));
+//                }
+//            });
         }
     }
 
@@ -222,8 +216,8 @@ public class TransparentActivity extends BaseActivity implements DialogInterface
     protected void onStart() {
         super.onStart();
 
-        Intent intent = new Intent(this, DataSyncService.class);
-        getApplicationContext().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+//        Intent intent = new Intent(this, DataSyncService.class);
+//        getApplicationContext().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -234,7 +228,7 @@ public class TransparentActivity extends BaseActivity implements DialogInterface
         if (mSafeObserver != null) mSafeObserver.dispose();
         if (mBound) {
             //mService.stopWebSocket();
-            getApplicationContext().unbindService(mConnection);
+//            getApplicationContext().unbindService(mConnection);
             mBound = false;
         }
 

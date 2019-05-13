@@ -25,7 +25,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.payano.homeassistant.model.Entity;
 import com.payano.homeassistant.model.rest.RxPayload;
 import com.payano.homeassistant.provider.DatabaseManager;
-import com.payano.homeassistant.service.DataSyncService;
 import com.payano.homeassistant.util.CommonUtil;
 import com.payano.homeassistant.util.IconGenerator;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -68,21 +67,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private HashMap<String, Marker> markers = new HashMap<>();
 
     //Bound Service (Experimental)
-    private DataSyncService mService;
+//    private DataSyncService mService;
     private SafeObserver<RxPayload> mSafeObserver;
     private boolean mBound;
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
-            DataSyncService.LocalBinder binder = (DataSyncService.LocalBinder) service;
-            mService = binder.getService();
-            mBound = true;
-
-            mSafeObserver = new SafeObserver<>(MapActivity.this);
-            binder.getEventSubject()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(mSafeObserver);
+//            DataSyncService.LocalBinder binder = (DataSyncService.LocalBinder) service;
+//            mService = binder.getService();
+//            mBound = true;
+//
+//            mSafeObserver = new SafeObserver<>(MapActivity.this);
+//            binder.getEventSubject()
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe(mSafeObserver);
         }
 
         @Override
@@ -104,8 +103,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onStart() {
         super.onStart();
 
-        Intent intent = new Intent(this, DataSyncService.class);
-        getApplicationContext().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+//        Intent intent = new Intent(this, DataSyncService.class);
+//        getApplicationContext().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override

@@ -35,10 +35,10 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.StackingBehavior;
+import com.payano.homeassistant.HomeAssistant.HomeAssistant;
 import com.payano.homeassistant.model.Entity;
 import com.payano.homeassistant.model.ErrorMessage;
 import com.payano.homeassistant.model.Group;
-import com.payano.homeassistant.model.HomeAssistantServer;
 import com.payano.homeassistant.provider.DatabaseManager;
 import com.payano.homeassistant.provider.EntityWidgetProvider;
 import com.payano.homeassistant.provider.ServiceProvider;
@@ -84,6 +84,8 @@ public class ConnectActivity extends BaseActivity {
         setContentView(R.layout.activity_connect);
         mLayoutMain = findViewById(R.id.main_layout);
         mLayoutMain.setVisibility(View.GONE);
+        HomeAssistant.getInstance(); // Create homeAssistant server
+
         //Send a Google Analytics screen view.
         //Tracker tracker = getAppController().getDefaultTracker();
         //tracker.send(new HitBuilders.ScreenViewBuilder().build());
@@ -264,28 +266,28 @@ public class ConnectActivity extends BaseActivity {
                 publishProgress(getString(R.string.progress_connecting));
 
                 //Response<BootstrapResponse> response = ServiceProvider.getApiService(mUri).bootstrap(mBearerHeader).execute();
-                Response<String> response = ServiceProvider.getRawApiService(mUri).rawStates(mBearerHeader).execute();
-
-                if (response.code() != 200) {
-                    if (response.code() == 401) {
-                        return new ErrorMessage("Error 401", getString(R.string.error_invalid_password));
-                    }
-
-                    if (response.code() == 404) {
-                        return new ErrorMessage("Error 404", getString(R.string.error_invalid_ha_server));
-                    }
-
-                    //OAuthToken token = new Gson().fromJson(response.errorBody().string(), OAuthToken.class);
-                    return new ErrorMessage("Error" + response.code(), response.message());
-                }
-
-                mBoostrapData = response.body();
-                final ArrayList<Entity> bootstrapResponse = CommonUtil.inflate(mBoostrapData, new TypeToken<ArrayList<Entity>>() {
-                }.getType());
-                //final BootstrapResponse bootstrapResponse = CommonUtil.inflate(CommonUtil.readFromAssets(ConnectActivity.this, "bootstrap.txt"), BootstrapResponse.class);
-                //final BootstrapResponse bootstrapResponse = response.body();
-                CommonUtil.logLargeString("YouQi", "bootstrapResponse: " + bootstrapResponse);
-                publishProgress(getString(R.string.progress_bootstrapping));
+//                Response<String> response = ServiceProvider.getRawApiService(mUri).rawStates(mBearerHeader).execute();
+//
+//                if (response.code() != 200) {
+//                    if (response.code() == 401) {
+//                        return new ErrorMessage("Error 401", getString(R.string.error_invalid_password));
+//                    }
+//
+//                    if (response.code() == 404) {
+//                        return new ErrorMessage("Error 404", getString(R.string.error_invalid_ha_server));
+//                    }
+//
+//                    //OAuthToken token = new Gson().fromJson(response.errorBody().string(), OAuthToken.class);
+//                    return new ErrorMessage("Error" + response.code(), response.message());
+//                }
+//
+//                mBoostrapData = response.body();
+//                final ArrayList<Entity> bootstrapResponse = CommonUtil.inflate(mBoostrapData, new TypeToken<ArrayList<Entity>>() {
+//                }.getType());
+//                //final BootstrapResponse bootstrapResponse = CommonUtil.inflate(CommonUtil.readFromAssets(ConnectActivity.this, "bootstrap.txt"), BootstrapResponse.class);
+//                //final BootstrapResponse bootstrapResponse = response.body();
+//                CommonUtil.logLargeString("YouQi", "bootstrapResponse: " + bootstrapResponse);
+//                publishProgress(getString(R.string.progress_bootstrapping));
 
                 SharedPreferences.Editor editor = mSharedPref.edit();
                 editor.putString(EXTRA_FULL_URI, mUri);
@@ -295,10 +297,20 @@ public class ConnectActivity extends BaseActivity {
                 editor.putLong(EXTRA_LAST_REQUEST, System.currentTimeMillis()).apply();
                 editor.apply();
 
+                Toast bread;
+                if(HomeAssistant.getInstance().isConnected()){
+                CommonUtil.logLargeString("YouQi", "CONNECTED");
+                }else {
+                CommonUtil.logLargeString("YouQi", "NOT CONNECTED");
+                }
 
-                DatabaseManager databaseManager = DatabaseManager.getInstance(ConnectActivity.this);
-                databaseManager.updateTables(bootstrapResponse);
-                databaseManager.addConnection(new HomeAssistantServer(mUri, mPassword));
+                HomeAssistant.getInstance().isConnected();
+
+
+
+//                DatabaseManager databaseManager = DatabaseManager.getInstance(ConnectActivity.this);
+//                databaseManager.updateTables(bootstrapResponse);
+//                databaseManager.addConnection(new HomeAssistantServer(mUri, mPassword));
 //                ArrayList<Entity> entities = databaseManager.getEntities();
 //                for (Entity entity : entities) {
 //                    Log.d("YouQi", "Entity: " + entity.entityId);
@@ -461,13 +473,13 @@ public class ConnectActivity extends BaseActivity {
                     DatabaseManager databaseManager = DatabaseManager.getInstance(ConnectActivity.this);
 
                     ArrayList<Group> groups = databaseManager.getGroups();
-                    ArrayList<HomeAssistantServer> connections = databaseManager.getConnections();
+//                    ArrayList<HomeAssistantServer> connections = databaseManager.getConnections();
                     int dashboardCount = databaseManager.getDashboardCount();
                     Log.d("YouQi", "dashboardCount: " + dashboardCount);
-                    if (groups.size() != 0 && connections.size() != 0 && dashboardCount > 0) {
-                        startMainActivity();
-                        return;
-                    }
+//                    if (groups.size() != 0 && connections.size() != 0 && dashboardCount > 0) {
+//                        startMainActivity();
+//                        return;
+//                    }
                 }
 
                 mLayoutMain.setVisibility(View.VISIBLE);

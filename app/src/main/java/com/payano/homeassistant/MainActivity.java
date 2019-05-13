@@ -63,7 +63,6 @@ import com.payano.homeassistant.model.Changelog;
 import com.payano.homeassistant.model.Entity;
 import com.payano.homeassistant.model.ErrorMessage;
 import com.payano.homeassistant.model.Group;
-import com.payano.homeassistant.model.HomeAssistantServer;
 import com.payano.homeassistant.model.MDIFont;
 import com.payano.homeassistant.model.rest.CallServiceRequest;
 import com.payano.homeassistant.model.rest.RxPayload;
@@ -71,7 +70,6 @@ import com.payano.homeassistant.provider.DatabaseManager;
 import com.payano.homeassistant.provider.DummyContentProvider;
 import com.payano.homeassistant.provider.EntityContentProvider;
 import com.payano.homeassistant.provider.ServiceProvider;
-import com.payano.homeassistant.service.DataSyncService;
 import com.payano.homeassistant.util.BottomNavigationViewHelper;
 import com.payano.homeassistant.shared.EntityProcessInterface;
 import com.payano.homeassistant.shared.EventEmitterInterface;
@@ -98,30 +96,28 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends BaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
-        EntityProcessInterface,
-        EventEmitterInterface{
+public class MainActivity extends BaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     private Subject<RxPayload> mEventEmitter = PublishSubject.create();
     private Call<String> mCall2;
     private Spinner mServerSpinner;
     private int spinnerCheck = 0;
-    private ArrayList<HomeAssistantServer> mServers;
-    private ServerAdapter mServerAdapter;
+//    private ArrayList<HomeAssistantServer> mServers;
+//    private ServerAdapter mServerAdapter;
     private AppBarLayout mAppBarLayout;
 
-    @Override
-    public Subject<RxPayload> getEventSubject() {
-        return mEventEmitter;
-    }
+//    @Override
+//    public Subject<RxPayload> getEventSubject() {
+//        return mEventEmitter;
+//    }
 
     //Cursor Loader
     private EntityChangeObserver mEntityChangeObserver;
 
     private SharedPreferences mSharedPref;
 
-    private HomeAssistantServer mCurrentServer;
+//    private HomeAssistantServer mCurrentServer;
     private ProgressBar mProgressBar;
-    private RefreshTask mRefreshTask;
+//    private RefreshTask mRefreshTask;
     private Call<ArrayList<Entity>> mCall;
     private boolean doubleBackToExitPressedOnce;
     private MultiSwipeRefreshLayout mSwipeRefresh;
@@ -142,47 +138,47 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
     private ArrayList<Group> mGroups;
 
     //Bound Service (Experimental)
-    private DataSyncService mService;
+//    private DataSyncService mService;
     private boolean mBound;
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
-            DataSyncService.LocalBinder binder = (DataSyncService.LocalBinder) service;
-            mService = binder.getService();
-            mBound = true;
-
-            if (mSharedPref.getBoolean("websocket_mode", true)) {
-                mService.startWebSocket(mCurrentServer, true);
-            }
-
-
-            
-            Log.d("YouQi", "Service Bound");
-            binder.getEventSubject()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<RxPayload>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(RxPayload rxPayload) {
-                            mEventEmitter.onNext(rxPayload);
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
+//            DataSyncService.LocalBinder binder = (DataSyncService.LocalBinder) service;
+//            mService = binder.getService();
+//            mBound = true;
+//
+//            if (mSharedPref.getBoolean("websocket_mode", true)) {
+//                mService.startWebSocket(mCurrentServer, true);
+//            }
+//
+//
+//
+//            Log.d("YouQi", "Service Bound");
+//            binder.getEventSubject()
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe(new Observer<RxPayload>() {
+//                        @Override
+//                        public void onSubscribe(Disposable d) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onNext(RxPayload rxPayload) {
+//                            mEventEmitter.onNext(rxPayload);
+//                        }
+//
+//                        @Override
+//                        public void onError(Throwable e) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onComplete() {
+//
+//                        }
+//                    });
 
 
         }
@@ -243,12 +239,12 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
 
         setupContentObserver();
         mSharedPref = getAppController().getSharedPref();
-        mServers = DatabaseManager.getInstance(this).getConnections();
+//        mServers = DatabaseManager.getInstance(this).getConnections();
         //mCurrentServer = HomeAssistantServer.newInstance(mSharedPref);
-        mCurrentServer = mServers.get(mSharedPref.getInt("connectionIndex", 0));
+//        mCurrentServer = mServers.get(mSharedPref.getInt("connectionIndex", 0));
         mProgressBar = findViewById(R.id.progressBar);
 
-        Crashlytics.log(Log.DEBUG, "YouQi", mCurrentServer.getBaseUrl());
+//        Crashlytics.log(Log.DEBUG, "YouQi", mCurrentServer.getBaseUrl());
         Log.d("YouQi", "onCreate");
 
         setupToolbar();
@@ -334,12 +330,12 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         CommonUtil.setBouncyTouch(mProfileImage);
 
         final TextView websocketButton = mHeaderView.findViewById(R.id.text_websocket);
-        websocketButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mService.startWebSocket(mCurrentServer);
-            }
-        });
+//        websocketButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                mService.startWebSocket(mCurrentServer);
+//            }
+//        });
 
 
         //TextView mainText = mHeaderView.findViewById(R.id.main_text);
@@ -349,8 +345,8 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
 
         mServerSpinner = mHeaderView.findViewById(R.id.spinner_server);
         //servers.add(new HomeAssistantServer(mCurrentServer.getBaseUrl(), mCurrentServer.getPassword()));
-        mServerAdapter = new ServerAdapter(this, 0, mServers);
-        mServerSpinner.setAdapter(mServerAdapter);
+//        mServerAdapter = new ServerAdapter(this, 0, mServers);
+//        mServerSpinner.setAdapter(mServerAdapter);
         mServerSpinner.setSelection(mSharedPref.getInt("connectionIndex", 0), false); //must
         mServerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -360,7 +356,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
 
                 Log.d("YouQi", "mServerSpinner selected: " + pos);
                 mSharedPref.edit().putInt("connectionIndex", pos).apply();
-                switchConnection(mServers.get(pos));
+//                switchConnection(mServers.get(pos));
 //                HomeAssistantServer mServer = (HomeAssistantServer) mServerAdapter.getSelectedItem();
 //                if (mServer == null) {
 //                    logOut();
@@ -439,7 +435,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
                         break;
 
                     case R.id.nav_logout:
-                        showSwitch();
+//                        showSwitch();
                         mDrawerLayout.closeDrawers();
                         break;
 
@@ -451,25 +447,25 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         });
 
     }
-
-    private void switchConnection(HomeAssistantServer homeAssistantServer) {
-        mCurrentServer = homeAssistantServer;
-        if (mSharedPref.getBoolean("websocket_mode", true)) {
-            mService.stopWebSocket();
-            mService.startWebSocket(mCurrentServer);
-        }
-    }
+//
+//    private void switchConnection(HomeAssistantServer homeAssistantServer) {
+//        mCurrentServer = homeAssistantServer;
+//        if (mSharedPref.getBoolean("websocket_mode", true)) {
+//            mService.stopWebSocket();
+//            mService.startWebSocket(mCurrentServer);
+//        }
+//    }
 
     private void showLogbook() {
         Intent intent = new Intent(MainActivity.this, LogbookActivity.class);
-        intent.putExtra("server", CommonUtil.deflate(mCurrentServer));
+//        intent.putExtra("server", CommonUtil.deflate(mCurrentServer));
         startActivity(intent);
         overridePendingTransition(R.anim.activity_open_translate, R.anim.activity_close_scale);
     }
 
     private void showMap() {
         Intent intent = new Intent(MainActivity.this, MapActivity.class);
-        intent.putExtra("server", CommonUtil.deflate(mCurrentServer));
+//        intent.putExtra("server", CommonUtil.deflate(mCurrentServer));
         startActivity(intent);
         overridePendingTransition(R.anim.activity_open_translate, R.anim.activity_close_scale);
     }
@@ -538,12 +534,12 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
 
     private void setupBottomNavigation() {
         mSwipeRefresh = findViewById(R.id.swipe_refresh_layout);
-        mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshApi();
-            }
-        });
+//        mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                refreshApi();
+//            }
+//        });
         mSwipeRefresh.setSwipeableChildren(mViewPager);
 
         mNavigation = findViewById(R.id.navigation);
@@ -583,8 +579,8 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
     protected void onStart() {
         super.onStart();
 
-        Intent intent = new Intent(this, DataSyncService.class);
-        getApplicationContext().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+//        Intent intent = new Intent(this, DataSyncService.class);
+//        getApplicationContext().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -611,7 +607,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         switch (item.getItemId()) {
 
             case R.id.action_refresh:
-                refreshApi();
+//                refreshApi();
                 return true;
 
             case R.id.action_edit:
@@ -638,7 +634,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
                 return true;
 
             case R.id.action_switch:
-                showSwitch();
+//                showSwitch();
                 return true;
 
             //case R.id.action_logout:
@@ -723,33 +719,33 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
-                        if (mCall2 == null) {
-                            showNetworkBusy();
-                            mCall2 = ServiceProvider.getRawApiService(mCurrentServer.getBaseUrl()).rawStates(mCurrentServer.getBearerHeader());
-                            mCall2.enqueue(new Callback<String>() {
-                                @Override
-                                public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
-                                    mCall2 = null;
-                                    showNetworkIdle();
-
-                                    if (FaultUtil.isRetrofitServerError(response)) {
-                                        showError(response.message());
-                                        return;
-                                    }
-
-                                    File bootstrapFile = CommonUtil.writeToExternalCache(MainActivity.this, "states.json", response.body());
-                                    Uri uri = Uri.fromFile(bootstrapFile);
-                                    sendBugReport(uri);
-                                }
-
-                                @Override
-                                public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
-                                    mCall2 = null;
-                                    showNetworkIdle();
-                                    showError(FaultUtil.getPrintableMessage(MainActivity.this, t));
-                                }
-                            });
-                        }
+//                        if (mCall2 == null) {
+//                            showNetworkBusy();
+//                            mCall2 = ServiceProvider.getRawApiService(mCurrentServer.getBaseUrl()).rawStates(mCurrentServer.getBearerHeader());
+//                            mCall2.enqueue(new Callback<String>() {
+//                                @Override
+//                                public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+//                                    mCall2 = null;
+//                                    showNetworkIdle();
+//
+//                                    if (FaultUtil.isRetrofitServerError(response)) {
+//                                        showError(response.message());
+//                                        return;
+//                                    }
+//
+//                                    File bootstrapFile = CommonUtil.writeToExternalCache(MainActivity.this, "states.json", response.body());
+//                                    Uri uri = Uri.fromFile(bootstrapFile);
+//                                    sendBugReport(uri);
+//                                }
+//
+//                                @Override
+//                                public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+//                                    mCall2 = null;
+//                                    showNetworkIdle();
+//                                    showError(FaultUtil.getPrintableMessage(MainActivity.this, t));
+//                                }
+//                            });
+//                        }
 
 
                     }
@@ -771,21 +767,21 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         startActivity(Intent.createChooser(emailIntent, getString(R.string.title_send_email)));
     }
 
-    private void showSwitch() {
-        new MaterialDialog.Builder(this)
-                .content(getString(R.string.message_signout, mCurrentServer.getBaseUrl()))
-                .positiveText(getString(R.string.action_logout))
-                .negativeText(getString(R.string.action_cancel))
-                .negativeColorRes(R.color.md_blue_500)
-                .positiveColorRes(R.color.md_blue_500)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        logOut();
-                    }
-                })
-                .show();
-    }
+//    private void showSwitch() {
+//        new MaterialDialog.Builder(this)
+//                .content(getString(R.string.message_signout, mCurrentServer.getBaseUrl()))
+//                .positiveText(getString(R.string.action_logout))
+//                .negativeText(getString(R.string.action_cancel))
+//                .negativeColorRes(R.color.md_blue_500)
+//                .positiveColorRes(R.color.md_blue_500)
+//                .onPositive(new MaterialDialog.SingleButtonCallback() {
+//                    @Override
+//                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+//                        logOut();
+//                    }
+//                })
+//                .show();
+//    }
 
     private void showWebUI() {
         CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
@@ -797,26 +793,26 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
 //        builder.setSecondaryToolbarColor(ResourcesCompat.getColor(getResources(), R.color.md_white_1000, null));
         CustomTabsIntent customTabsIntent = builder.build();
 
-        try {
-            customTabsIntent.launchUrl(this, mCurrentServer.getBaseUri());
-        } catch (ActivityNotFoundException e) {
-            showToast(getString(R.string.exception_no_chrome));
-        }
+//        try {
+//            customTabsIntent.launchUrl(this, mCurrentServer.getBaseUri());
+//        } catch (ActivityNotFoundException e) {
+//            showToast(getString(R.string.exception_no_chrome));
+//        }
     }
 
     private void addConnection() {
         //mDrawerLayout.closeDrawers();
-        ConnectionFragment fragment = ConnectionFragment.newInstance(null);
-        fragment.show(getFragmentManager(), null);
+//        ConnectionFragment fragment = ConnectionFragment.newInstance(null);
+//        fragment.show(getFragmentManager(), null);
         //Toast.makeText(mService, "add connection", Toast.LENGTH_SHORT).show();
     }
 
-    public void refreshConnections() {
-        Log.d("YouQi", "refreshConnections");
-        mServers = DatabaseManager.getInstance(this).getConnections();
-        mServerAdapter.setItems(mServers);
-        mServerAdapter.notifyDataSetChanged();
-    }
+//    public void refreshConnections() {
+//        Log.d("YouQi", "refreshConnections");
+//        mServers = DatabaseManager.getInstance(this).getConnections();
+//        mServerAdapter.setItems(mServers);
+//        mServerAdapter.notifyDataSetChanged();
+//    }
 
     @Override
     public void onBackPressed() {
@@ -849,12 +845,12 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         Toast.makeText(this, status, Toast.LENGTH_SHORT).show();
     }
 
-    public void refreshApi() {
-        if (mRefreshTask == null) {
-            mRefreshTask = new RefreshTask();
-            mRefreshTask.execute((Void) null);
-        }
-    }
+//    public void refreshApi() {
+//        if (mRefreshTask == null) {
+//            mRefreshTask = new RefreshTask();
+//            mRefreshTask.execute((Void) null);
+//        }
+//    }
 
     @Override
     protected void onPause() {
@@ -862,70 +858,70 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         getContentResolver().unregisterContentObserver(mEntityChangeObserver);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getContentResolver().registerContentObserver(DummyContentProvider.getUrl(), true, mEntityChangeObserver);
-        if (!runonce || (mService != null && !mService.isWebSocketRunning())) {
-            runonce = true;
-            refreshApi();
-        }
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        getContentResolver().registerContentObserver(DummyContentProvider.getUrl(), true, mEntityChangeObserver);
+//        if (!runonce || (mService != null && !mService.isWebSocketRunning())) {
+//            runonce = true;
+//            refreshApi();
+//        }
+//    }
 
-    @Override
-    public void callService(final String domain, final String service, CallServiceRequest serviceRequest) {
-        if (mService != null && mService.isWebSocketRunning()) {
-            Log.d("YouQi", "Using WebSocket");
-            mService.callService(domain, service, serviceRequest);
-        } else if (mCall == null) {
-            Log.d("YouQi", "Using HTTP");
-            showNetworkBusy();
-            Crashlytics.log("baseUrl: " + mCurrentServer.getBaseUrl());
-            mCall = ServiceProvider.getApiService(mCurrentServer.getBaseUrl()).callService(mCurrentServer.getBearerHeader(), domain, service, serviceRequest);
-            mCall.enqueue(new Callback<ArrayList<Entity>>() {
-                @Override
-                public void onResponse(@NonNull Call<ArrayList<Entity>> call, @NonNull Response<ArrayList<Entity>> response) {
-                    mCall = null;
-                    showNetworkIdle();
-
-                    if (FaultUtil.isRetrofitServerError(response)) {
-                        showError(response.message());
-                        return;
-                    }
-
-                    ArrayList<Entity> restResponse = response.body();
-                    CommonUtil.logLargeString("YouQi", "service restResponse: " + CommonUtil.deflate(restResponse));
-
-                    if ("script".equals(domain) || ("automation".equals(domain) || "scene".equals(domain) || "trigger".equals(service))) {
-                        showToast(getString(R.string.toast_triggered));
-                    }
-
-                    if (restResponse != null) {
-                        for (Entity entity : restResponse) {
-                            getContentResolver().update(Uri.parse("content://com.payano.homeassistant.provider.EntityContentProvider/"), entity.getContentValues(), "ENTITY_ID='" + entity.entityId + "'", null);
-                        }
-
-                        //RxPayload payload = RxPayload.getInstance("UPDATE_ALL");
-                        //payload.entities = restResponse;
-                        //mEventEmitter.onNext(payload);
-                    }
-
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<ArrayList<Entity>> call, @NonNull Throwable t) {
-                    mCall = null;
-                    showNetworkIdle();
-                    showError(FaultUtil.getPrintableMessage(MainActivity.this, t));
-                }
-            });
-        }
-
-        //ContentValues values = new ContentValues();
-        //values.put(HabitTable.TIME); //whatever column you want to update, I dont know the name of it
-        //getContentResolver().update(HabitTable.CONTENT_URI,values,HabitTable.ID+"=?",new String[] {String.valueOf(id)}); //id is the id of the row you wan to update
-        //getContentResolver().update()
-    }
+//    @Override
+//    public void callService(final String domain, final String service, CallServiceRequest serviceRequest) {
+//        if (mService != null && mService.isWebSocketRunning()) {
+//            Log.d("YouQi", "Using WebSocket");
+//            mService.callService(domain, service, serviceRequest);
+//        } else if (mCall == null) {
+//            Log.d("YouQi", "Using HTTP");
+//            showNetworkBusy();
+//            Crashlytics.log("baseUrl: " + mCurrentServer.getBaseUrl());
+//            mCall = ServiceProvider.getApiService(mCurrentServer.getBaseUrl()).callService(mCurrentServer.getBearerHeader(), domain, service, serviceRequest);
+//            mCall.enqueue(new Callback<ArrayList<Entity>>() {
+//                @Override
+//                public void onResponse(@NonNull Call<ArrayList<Entity>> call, @NonNull Response<ArrayList<Entity>> response) {
+//                    mCall = null;
+//                    showNetworkIdle();
+//
+//                    if (FaultUtil.isRetrofitServerError(response)) {
+//                        showError(response.message());
+//                        return;
+//                    }
+//
+//                    ArrayList<Entity> restResponse = response.body();
+//                    CommonUtil.logLargeString("YouQi", "service restResponse: " + CommonUtil.deflate(restResponse));
+//
+//                    if ("script".equals(domain) || ("automation".equals(domain) || "scene".equals(domain) || "trigger".equals(service))) {
+//                        showToast(getString(R.string.toast_triggered));
+//                    }
+//
+//                    if (restResponse != null) {
+//                        for (Entity entity : restResponse) {
+//                            getContentResolver().update(Uri.parse("content://com.payano.homeassistant.provider.EntityContentProvider/"), entity.getContentValues(), "ENTITY_ID='" + entity.entityId + "'", null);
+//                        }
+//
+//                        //RxPayload payload = RxPayload.getInstance("UPDATE_ALL");
+//                        //payload.entities = restResponse;
+//                        //mEventEmitter.onNext(payload);
+//                    }
+//
+//                }
+//
+//                @Override
+//                public void onFailure(@NonNull Call<ArrayList<Entity>> call, @NonNull Throwable t) {
+//                    mCall = null;
+//                    showNetworkIdle();
+//                    showError(FaultUtil.getPrintableMessage(MainActivity.this, t));
+//                }
+//            });
+//        }
+//
+//        //ContentValues values = new ContentValues();
+//        //values.put(HabitTable.TIME); //whatever column you want to update, I dont know the name of it
+//        //getContentResolver().update(HabitTable.CONTENT_URI,values,HabitTable.ID+"=?",new String[] {String.valueOf(id)}); //id is the id of the row you wan to update
+//        //getContentResolver().update()
+//    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -940,10 +936,10 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
                 break;
 
             case R.id.action_refresh:
-                if (mRefreshTask == null) {
-                    mSwipeRefresh.setRefreshing(true);
-                }
-                refreshApi();
+//                if (mRefreshTask == null) {
+//                    mSwipeRefresh.setRefreshing(true);
+//                }
+//                refreshApi();
                 break;
 
             case R.id.action_edit:
@@ -955,7 +951,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
                 break;
 
             case R.id.action_switch:
-                showSwitch();
+//                showSwitch();
                 break;
         }
 
@@ -966,81 +962,10 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         mSearchView.showSearch(false);
     }
 
-    @Override
-    public HomeAssistantServer getServer() {
-        return mCurrentServer;
-    }
-
-    @Override
-    public Context getActivityContext() {
-        return this;
-    }
-
-    private class RefreshTask extends AsyncTask<Void, String, ErrorMessage> {
-        RefreshTask() {
-            showNetworkBusy();
-            mNavigation.getMenu().findItem(R.id.action_refresh).setEnabled(false);
-        }
-
-        @Override
-        protected ErrorMessage doInBackground(Void... params) {
-            try {
-                publishProgress("Connecting");
-                Response<ArrayList<Entity>> response = ServiceProvider.getApiService(mCurrentServer.getBaseUrl()).getStates(mCurrentServer.getBearerHeader()).execute();
-                if (response.code() != 200) {
-                    //OAuthToken token = new Gson().fromJson(response.errorBody().string(), OAuthToken.class);
-                    return new ErrorMessage("Error", response.message());
-                }
-
-                final ArrayList<Entity> statesResponse = response.body();
-
-                if (statesResponse == null) {
-                    throw new RuntimeException("No Data");
-                }
-
-                Log.d("YouQi", "bootstrapResponse: " + statesResponse);
-                publishProgress("Refreshing");
-
-                ArrayList<ContentValues> values = new ArrayList<>();
-                for (Entity entity : statesResponse) {
-                    values.add(entity.getContentValues());
-                }
-
-                getContentResolver().bulkInsert(EntityContentProvider.getUrl(), values.toArray(new ContentValues[values.size()]));
-                publishProgress((String) null);
-                //Crashlytics.setUserIdentifier(settings.bootstrapResponse.profile.loginId);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return new ErrorMessage("System Exception", FaultUtil.getPrintableMessage(MainActivity.this, e));
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(String... values) {
-            super.onProgressUpdate(values);
-            //setStatus(values[0]);
-        }
-
-        @Override
-        protected void onPostExecute(final ErrorMessage errorMessage) {
-            showNetworkIdle();
-            mRefreshTask = null;
-            mNavigation.getMenu().findItem(R.id.action_refresh).setEnabled(true);
-            mSwipeRefresh.setRefreshing(false);
-
-            if (errorMessage != null) {
-                showError(errorMessage.message);
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            showNetworkIdle();
-        }
-    }
+//    @Override
+//    public Context getActivityContext() {
+//        return this;
+//    }
 
     public void showSortOptions() {
         PopupMenu popup = new PopupMenu(this, ((BottomNavigationMenuView) mNavigation.getChildAt(0)).getChildAt(2));
@@ -1066,14 +991,14 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         return (EntityFragment) mViewPagerAdapter.getItem(mViewPager.getCurrentItem());
     }
 
-    @Override
-    public void showToast(String message) {
-        if (mToast != null) {
-            mToast.cancel();
-        }
-        mToast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
-        mToast.show();
-    }
+//    @Override
+//    public void showToast(String message) {
+//        if (mToast != null) {
+//            mToast.cancel();
+//        }
+//        mToast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+//        mToast.show();
+//    }
 
     public void showEdit(View v) {
         Bundle bundle = new Bundle();
@@ -1082,76 +1007,6 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         i.putExtras(bundle);
         startActivityForResult(i, 2001);
         overridePendingTransition(R.anim.stay_still, R.anim.fade_out);
-    }
-
-    private class ServerAdapter extends ArrayAdapter<HomeAssistantServer> {
-        private List<HomeAssistantServer> items;
-
-        ServerAdapter(Context context, int resource, List<HomeAssistantServer> objects) {
-            super(context, resource, objects);
-            items = objects;
-        }
-
-        public void setItems(List<HomeAssistantServer> objects) {
-            items = objects;
-        }
-
-        @Override
-        public int getCount() {
-            return 1 + items.size();
-        }
-
-        @Override
-        public View getDropDownView(int position, View convertView, @NonNull final ViewGroup parent) {
-            if (convertView == null) {
-                LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                //convertView = vi.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
-                convertView = vi.inflate(R.layout.item_server_dropdown, parent, false);
-            }
-
-            TextView mainText = convertView.findViewById(R.id.main_text);
-            TextView subText = convertView.findViewById(R.id.sub_text);
-
-            if (position == items.size()) {
-                mainText.setText(TextUtils.concat(
-                        CommonUtil.getSpanText(MainActivity.this, " \n", null, 0.2f),
-                        CommonUtil.getSpanText(MainActivity.this, "Add Connection…", null, 0.9f),
-                        CommonUtil.getSpanText(MainActivity.this, "\n ", null, 0.2f)
-                ));
-                subText.setVisibility(View.GONE);
-
-                convertView.findViewById(R.id.parent).setClickable(true);
-                convertView.findViewById(R.id.parent).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //Toast.makeText(MainActivity.this, "Hello", Toast.LENGTH_SHORT).show();
-                        addConnection();
-                        View root = parent.getRootView();
-                        root.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BACK));
-                        root.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BACK));
-                    }
-                });
-            } else {
-                mainText.setText(items.get(position).getName());
-                subText.setVisibility(View.VISIBLE);
-                subText.setText(items.get(position).getBaseUrl());
-                convertView.findViewById(R.id.parent).setClickable(false);
-            }
-
-            return convertView;
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-            if (convertView == null) {
-                convertView = View.inflate(getContext(), android.R.layout.simple_list_item_1, null);
-            }
-
-            ((TextView) convertView.findViewById(android.R.id.text1)).setText(items.get(position).getLine(getContext()));
-            ((TextView) convertView.findViewById(android.R.id.text1)).setTextColor(ResourcesCompat.getColor(getResources(), R.color.md_white_1000, null));
-            return convertView;
-        }
     }
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {
